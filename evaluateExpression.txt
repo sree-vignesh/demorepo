@@ -1,0 +1,42 @@
+%{
+#include<stdio.h>
+#include "y.tab.h"
+int yylval;
+%}
+%%
+[0-9]+ {
+yylval=atoi(yytext);
+return NUMBER;
+}
+[\t] ;
+[\n] return 0;
+. return yytext[0];
+%%
+int yywrap()
+{
+return 1;
+}
+Yacc File:
+%{
+#include<stdio.h>
+%}
+%token NUMBER
+%left '+'
+%%
+ArithmeticExpression: E{
+printf("\nResult=%d\n", $$);
+return 0;
+};
+E:E'+'E {$$=$1+$3;}
+| NUMBER {$$=$1;}
+;
+%%
+void main()
+{
+printf("\nEnter Any Arithmetic expression with addition\n");
+yyparse();
+}
+void yyerror()
+{
+printf("\nEntered arithmetic expression cannot be computed \n\n");
+}
